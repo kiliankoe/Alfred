@@ -10,9 +10,9 @@ struct Repo: Itemable {
     var link1 = "https://www.example.com"
     var link2 = "https://www.example.com/doc"
     var summary = "This is soooo cool!"
-    
+
     var item: Item {
-        var item = Item(title: "\(name) (\(version))", subtitle: summary, arg: link1)
+        var item = Item(title: "\(name) (\(version))", subtitle: summary, arg: .simple(link1))
         item.alt = Modifier(arg: link2, subtitle: "Open documentation!")
         return item
     }
@@ -22,7 +22,7 @@ let res = Response()
 
 let repos = (0..<100).map { _ in Repo() }
 
-repos.forEach(res.addItem)
+res.addItems(repos)
 let json = res.toJSON()
 print(json)
 ```
@@ -54,7 +54,7 @@ let res = Response()
 and add some Items to it. You can use your own items if they conform to Itemable or you just use the plain Item type:
 
 ```Swift
-let item = Item(title: "a cool title", subtitle: "a cool subtitle", arg: "https://www.example.com")
+let item = Item(title: "a cool title", subtitle: "a cool subtitle", arg: .simple("https://www.example.com"))
 ```
 
 Then add the items to your response object:
@@ -62,7 +62,7 @@ Then add the items to your response object:
 ```Swift
 res.addItem(item) // one item
 
-items.forEach(res.addItem) // array of items
+res.addItems(items) // array of items
 ```
 
 If all output items are in the response instance, just print it out, so that Alfred is showing the results:
@@ -72,6 +72,12 @@ print(res.toJSON())
 ```
 
 That's all!
+
+## Complex Arguments ##
+
+Complex arguments might be a thing you will never use. It is possible to extend not only one output of your script but also multiple variables. This can be very useful!
+To create complex arguments, just set the arg property of the Item to .complex(...) and inject an instance of ComplexArgument. ComplexArgument also has the 'simple' argument in it which you can set on the 'argument' property. But you also have the possibility to set a variety of custom variables. Just set a dictionary of your values to the variables property of the ComplexArgument instance.
+In Alfred you can then use the values with the ```{var:varName}``` writing style. varName would be the key in the dictionary and the resulting output would be the value in the dictionary.
 
 ## Build it ##
 
