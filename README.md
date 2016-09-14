@@ -13,7 +13,7 @@ struct Repo: Itemable {
 
     var item: Item {
         var item = Item(title: "\(name) (\(version))", subtitle: summary, arg: .simple(link1))
-        item.alt = Modifier(arg: link2, subtitle: "Open documentation!")
+        item.alt = Modifier(arg: .simple(link2), subtitle: "Open documentation!")
         return item
     }
 }
