@@ -39,7 +39,7 @@ let package = Package(
     name: "YOURPACKAGENAME",
     targets: [],
     dependencies: [
-        .Package(url: "https://github.com/BenchR267/swiftalfred.git", majorVersion: 1)
+        .Package(url: "https://github.com/BenchR267/swiftalfred.git", majorVersion: 1, minorVersion: 2)
     ]
 )
 ```
