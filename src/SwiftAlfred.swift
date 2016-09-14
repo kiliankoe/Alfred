@@ -9,8 +9,12 @@ public class Response: JSONable {
 
     public init() {}
 
-    public func addItem(item: Itemable) {
+    public func add(item: Itemable) {
         items.append(item.item)
+    }
+
+    public func add<T: Itemable>(items: [T]) {
+      items.forEach(add)
     }
 
     var json: [String: Any] {
@@ -23,6 +27,7 @@ public class Response: JSONable {
 }
 
 func jsonString(object: Any) -> String {
+  print("Try to convert \(object) to json...")
     guard let d = try? JSONSerialization.data(withJSONObject: object, options: .prettyPrinted) else {
         return ""
     }
@@ -53,8 +58,8 @@ public struct ComplexArgument {
 }
 
 public enum Argument {
-  case simple(argument: String)
-  case complex(argument: ComplexArgument)
+  case simple(String)
+  case complex(ComplexArgument)
 
   var json: Any {
     switch self {
@@ -101,7 +106,7 @@ public struct Item: JSONable, Itemable {
         j["uid"] = uid
         j["title"] = title
         j["subtitle"] = subtitle
-        j["arg"] = arg
+        j["arg"] = arg?.json
         j["icon"] = icon?.json
         if !valid { j["valid"] = valid }
         j["autocomplete"] = autocomplete
