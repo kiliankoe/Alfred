@@ -27,7 +27,6 @@ public class Response: JSONable {
 }
 
 func jsonString(object: Any) -> String {
-  print("Try to convert \(object) to json...")
     guard let d = try? JSONSerialization.data(withJSONObject: object, options: .prettyPrinted) else {
         return ""
     }
