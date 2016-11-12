@@ -22,7 +22,7 @@ let res = Response()
 
 let repos = (0..<100).map { _ in Repo() }
 
-res.addItems(repos)
+res.add(items: repos)
 let json = res.toJSON()
 print(json)
 ```
@@ -54,15 +54,15 @@ let res = Response()
 and add some Items to it. You can use your own items if they conform to Itemable or you just use the plain Item type:
 
 ```Swift
-let item = Item(title: "a cool title", subtitle: "a cool subtitle", arg: .simple("https://www.example.com"))
+let myitem = Item(title: "a cool title", subtitle: "a cool subtitle", arg: .simple("https://www.example.com"))
 ```
 
 Then add the items to your response object:
 
 ```Swift
-res.addItem(item) // one item
+res.add(item: myitem) // one item
 
-res.addItems(items) // array of items
+res.add(items: myitems) // array of items
 ```
 
 If all output items are in the response instance, just print it out, so that Alfred is showing the results:
