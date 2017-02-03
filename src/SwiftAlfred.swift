@@ -6,21 +6,21 @@ protocol JSONable {
 
 public class Response: JSONable {
     private var items = [Item]()
-
+    
     public init() {}
-
+    
     public func add(item: Itemable) {
         items.append(item.item)
     }
-
+    
     public func add<T: Itemable>(items: [T]) {
-      items.forEach(add)
+        items.forEach(add)
     }
-
+    
     var json: [String: Any] {
         return ["items": items.map { $0.json } ]
     }
-
+    
     public func toJSON() -> String {
         return jsonString(object: json)
     }

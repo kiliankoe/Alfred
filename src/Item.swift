@@ -3,10 +3,10 @@ public protocol Itemable {
 }
 
 public struct Item: JSONable, Itemable {
-
+    
     public enum ItemType {
         case file, skipCheck
-
+        
         var key: String {
             switch self {
             case .file: return "file"
@@ -14,13 +14,13 @@ public struct Item: JSONable, Itemable {
             }
         }
     }
-
+    
     public init(title: String, subtitle: String, arg: Argument? = nil) {
         self.title = title
         self.subtitle = subtitle
         self.arg = arg
     }
-
+    
     public var uid: String?
     public var title: String
     public var subtitle: String
@@ -31,7 +31,7 @@ public struct Item: JSONable, Itemable {
     public var type: Item.ItemType?
     public var cmd: Modifier?
     public var alt: Modifier?
-
+    
     var json: [String : Any] {
         var j = [String: Any]()
         j["uid"] = uid
@@ -42,16 +42,16 @@ public struct Item: JSONable, Itemable {
         if !valid { j["valid"] = valid }
         j["autocomplete"] = autocomplete
         j["type"] = type?.key
-
+        
         var mod: [String: Any]?
         if cmd != nil || alt != nil { mod = [String: Any]() }
         mod?["cmd"] = cmd?.json
         mod?["alt"] = alt?.json
         j["mod"] = mod
-
+        
         return j
     }
-
+    
     public var item: Item {
         return self
     }
