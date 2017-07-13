@@ -1,4 +1,5 @@
 import Foundation
+import class AppKit.NSColor
 
 /// Access workflow environment variables
 ///
@@ -36,16 +37,38 @@ public enum Env {
     ///
     /// Example output: "rgba(255,255,255,0.98)"
     public static var themeBackground: String? {
-        // TODO: Is the string's format always the same? If so it would make sense to return a color value directly.
         return envvar("alfred_theme_background")
+    }
+
+    /// Theme background color
+    public static var themeBackgroundColor: NSColor? {
+        guard
+            let themeBg = Env.themeBackground,
+            let color = NSColor(withRGBA: themeBg)
+        else {
+            return nil
+        }
+
+        return color
     }
 
     /// Theme's selected item background color.
     ///
     /// Example output: "rgba(255,255,255,0.98)"
     public static var themeSelectionBackground: String? {
-        // TODO: Is the string's format always the same? If so it would make sense to return a color value directly.
         return envvar("alfred_theme_selection_background")
+    }
+
+    /// Theme's selected item background color.
+    public static var themeSelectionBackgroundColor: NSColor? {
+        guard
+            let themeSelBg = Env.themeSelectionBackground,
+            let color = NSColor(withRGBA: themeSelBg)
+        else {
+            return nil
+        }
+
+        return color
     }
 
     /// Subtext mode the user selected in the Appearance settings.
@@ -146,5 +169,19 @@ public enum Env {
 
     private static func envvar(_ key: String) -> String? {
         return ProcessInfo.processInfo.environment[key]
+    }
+}
+
+private extension NSColor {
+    convenience init?(withRGBA rgba: String) {
+        let numberRegex = try! NSRegularExpression(pattern: "(\\d+\\.?\\d+)")
+        let nsrgba = rgba as NSString
+        let matches = numberRegex.matches(in: rgba, range: NSRange(location: 0, length: nsrgba.length))
+        let results = matches
+            .map { nsrgba.substring(with: $0.range) }
+            .flatMap { Double($0) }
+            .map { CGFloat($0) }
+        guard results.count == 4 else { return nil }
+        self.init(red: results[0], green: results[1], blue: results[2], alpha: results[3])
     }
 }
