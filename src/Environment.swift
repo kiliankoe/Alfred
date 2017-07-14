@@ -175,12 +175,14 @@ public enum Env {
 private extension NSColor {
     convenience init?(withRGBA rgba: String) {
         let numberRegex = try! NSRegularExpression(pattern: "(\\d+\\.?\\d+)")
-        let nsrgba = rgba as NSString
-        let matches = numberRegex.matches(in: rgba, range: NSRange(location: 0, length: nsrgba.length))
+        let matches = numberRegex.matches(in: rgba, range: NSRange(location: 0, length: rgba.count))
         let results = matches
-            .map { nsrgba.substring(with: $0.range) }
-            .flatMap { Double($0) }
-            .map { CGFloat($0) }
+            .map {
+                let startIdx = rgba.index(rgba.startIndex, offsetBy: $0.range.location)
+                let endIdx = rgba.index(startIdx, offsetBy: $0.range.length)
+                return rgba.substring(with: startIdx..<endIdx)
+            }
+            .flatMap { Double($0).map({ CGFloat($0) }) }
         guard results.count == 4 else { return nil }
         self.init(red: results[0], green: results[1], blue: results[2], alpha: results[3])
     }
