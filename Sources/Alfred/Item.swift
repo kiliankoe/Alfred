@@ -1,8 +1,8 @@
-public protocol ItemRepresentable: Encodable {
+public protocol ItemRepresentable {
     var item: Item { get }
 }
 
-public struct Item: ItemRepresentable {
+public struct Item: Encodable, ItemRepresentable {
     public var item: Item { self }
 
     public enum ItemType: String, Encodable {
