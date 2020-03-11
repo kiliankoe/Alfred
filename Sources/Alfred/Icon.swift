@@ -1,20 +1,19 @@
-public struct Icon: JSONable {
-    public enum IconType: String {
+public struct Icon: Codable, Equatable {
+    public enum IconType: String, Codable {
         case fileicon, filetype
     }
 
-    var type: Icon.IconType?
+    var type: IconType?
     var path: String
 
-    public init(path: String, type: Icon.IconType? = nil) {
+    public init(path: String, type: IconType? = nil) {
         self.path = path
         self.type = type
     }
+}
 
-    var json: [String : Any] {
-        var j = [String: Any]()
-        j["path"] = path
-        j["type"] = type?.rawValue
-        return j
+extension Icon: ExpressibleByStringLiteral {
+    public init(stringLiteral value: String) {
+        self = Icon(path: value)
     }
 }
