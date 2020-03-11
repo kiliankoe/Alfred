@@ -1,9 +1,9 @@
 import XCTest
 import Alfred
 
-final class ModifierTests: XCTestCase {
+final class ModifierActionTests: XCTestCase {
     func testEncodeValidModifier() throws {
-        let modifier = Modifier(
+        let modifier = ModifierAction(
             arg: .simple("arg"),
             subtitle: "subtitle")
         let json = try encodeToString(modifier)
@@ -16,7 +16,7 @@ final class ModifierTests: XCTestCase {
     }
 
     func testEncodeInvalidModifier() throws {
-        var modifier = Modifier(
+        var modifier = ModifierAction(
             arg: .simple("arg"),
             subtitle: "subtitle")
         modifier.valid = false

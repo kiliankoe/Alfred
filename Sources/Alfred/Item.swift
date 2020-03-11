@@ -19,8 +19,8 @@ public struct Item: ItemRepresentable {
         valid: Bool = true,
         autocomplete: String? = nil,
         type: Item.ItemType? = nil,
-        cmd: Modifier? = nil,
-        alt: Modifier? = nil
+        cmd: ModifierAction? = nil,
+        alt: ModifierAction? = nil
     ) {
         self.uid = uid
         self.title = title
@@ -42,8 +42,8 @@ public struct Item: ItemRepresentable {
     public var valid: Bool
     public var autocomplete: String?
     public var type: ItemType?
-    public var cmd: Modifier?
-    public var alt: Modifier?
+    public var cmd: ModifierAction?
+    public var alt: ModifierAction?
 
     public func uid(_ uid: String) -> Item {
         var item = self
@@ -81,13 +81,13 @@ public struct Item: ItemRepresentable {
         return item
     }
 
-    public func cmd(_ cmd: Modifier) -> Item {
+    public func cmd(_ cmd: ModifierAction) -> Item {
         var item = self
         item.cmd = cmd
         return item
     }
 
-    public func alt(_ alt: Modifier) -> Item {
+    public func alt(_ alt: ModifierAction) -> Item {
         var item = self
         item.alt = alt
         return item
@@ -122,8 +122,8 @@ public struct Item: ItemRepresentable {
         }
 
         struct ModifierWrapper: Encodable {
-            let cmd: Modifier?
-            let alt: Modifier?
+            let cmd: ModifierAction?
+            let alt: ModifierAction?
         }
         if cmd != nil || alt != nil {
             let wrapper = ModifierWrapper(cmd: cmd, alt: alt)

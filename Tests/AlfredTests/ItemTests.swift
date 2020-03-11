@@ -10,8 +10,8 @@ final class ItemTests: XCTestCase {
             .valid(false)
             .autocomplete("autocomplete")
             .type(.file)
-            .cmd(Modifier(arg: .simple("cmd")))
-            .alt(Modifier(arg: .simple("alt")))
+            .cmd(ModifierAction(arg: .simple("cmd")))
+            .alt(ModifierAction(arg: .simple("alt")))
 
         XCTAssertEqual(item.title, "title")
         XCTAssertEqual(item.subtitle, "subtitle")
@@ -21,8 +21,8 @@ final class ItemTests: XCTestCase {
         XCTAssertEqual(item.valid, false)
         XCTAssertEqual(item.autocomplete, "autocomplete")
         XCTAssertEqual(item.type, .file)
-        XCTAssertEqual(item.cmd, Modifier(arg: .simple("cmd")))
-        XCTAssertEqual(item.alt, Modifier(arg: .simple("alt")))
+        XCTAssertEqual(item.cmd, ModifierAction(arg: .simple("cmd")))
+        XCTAssertEqual(item.alt, ModifierAction(arg: .simple("alt")))
     }
 
     func testSimpleEncode() throws {

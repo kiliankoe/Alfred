@@ -1,4 +1,4 @@
-public struct Modifier: Encodable, Equatable {
+public struct ModifierAction: Encodable, Equatable {
     var arg: Argument
     var subtitle: String?
     public var valid: Bool
