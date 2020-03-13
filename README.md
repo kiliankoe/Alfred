@@ -32,7 +32,7 @@ print(output)
 Add the following package to your `Package.swift`'s list of dependencies:
 
 ```swift
-.package(url: "https://github.com/BenchR267/swiftalfred.git", from: "<#latest#>")
+.package(url: "https://github.com/kiliankoe/alfred.git", from: "<#latest#>")
 ```
 
 ## License
