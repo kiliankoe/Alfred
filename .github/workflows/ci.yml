@@ -1,38 +1,13 @@
 name: CI
 
-on:
-  - push
+on: [push]
 
 jobs:
-  linux:
-    strategy:
-      fail-fast: false
-      matrix:
-        image:
-          - "swift:5.1"
-    name: Linux
-    runs-on: ubuntu-latest
-    container:
-      image: ${{ matrix.image }}
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v1
-    - name: Version
-      run: swift --version
-    - name: Build
-      run: swift build -v -c debug
-    - name: Test
-      run: swift test -v -c debug
-
-  macos:
-    name: macOS
+  build_and_test:
     runs-on: macos-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v1
-    - name: Version
-      run: swift --version
+    - uses: actions/checkout@v2
     - name: Build
-      run: swift build -v -c debug
-    - name: Test
-      run: swift test -v -c debug
+      run: swift build -v
+    - name: Tests
+      run: swift test -v
