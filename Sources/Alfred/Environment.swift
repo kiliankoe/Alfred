@@ -4,7 +4,7 @@ import class AppKit.NSColor
 /// Access workflow environment variables
 ///
 /// See the [Alfred Workflow Documentation](https://www.alfredapp.com/help/workflows/script-environment-variables/) for more info.
-public enum Env {
+public enum Environment {
     /// Location of the Alfred.alfredpreferences.
     ///
     /// Example output: "/Users/Crayons/Dropbox/Alfred/Alfred.alfredpreferences"
@@ -17,7 +17,7 @@ public enum Env {
     /// Example output: "adbd4f66bc3ae8493832af61a41ee609b20d8705"
     public static var localPreferences: String? {
         guard
-            let preferences = Env.preferences,
+            let preferences = Environment.preferences,
             let localHash = envvar("alfred_preferences_localhash")
         else {
             return nil
@@ -43,7 +43,7 @@ public enum Env {
     /// Theme background color
     public static var themeBackgroundColor: NSColor? {
         guard
-            let themeBg = Env.themeBackground,
+            let themeBg = Environment.themeBackground,
             let color = NSColor(withRGBA: themeBg)
         else {
             return nil
@@ -62,7 +62,7 @@ public enum Env {
     /// Theme's selected item background color.
     public static var themeSelectionBackgroundColor: NSColor? {
         guard
-            let themeSelBg = Env.themeSelectionBackground,
+            let themeSelBg = Environment.themeSelectionBackground,
             let color = NSColor(withRGBA: themeSelBg)
         else {
             return nil
@@ -177,12 +177,12 @@ private extension NSColor {
         let numberRegex = try! NSRegularExpression(pattern: "(\\d+\\.?\\d+)")
         let matches = numberRegex.matches(in: rgba, range: NSRange(location: 0, length: rgba.count))
         let results = matches
-            .map {
-                let startIdx = rgba.index(rgba.startIndex, offsetBy: $0.range.location)
-                let endIdx = rgba.index(startIdx, offsetBy: $0.range.length)
+            .map { result -> String in
+                let startIdx = rgba.index(rgba.startIndex, offsetBy: result.range.location)
+                let endIdx = rgba.index(startIdx, offsetBy: result.range.length)
                 return rgba.substring(with: startIdx..<endIdx)
             }
-            .flatMap { Double($0).map({ CGFloat($0) }) }
+            .compactMap { Double($0).map({ CGFloat($0) }) }
         guard results.count == 4 else { return nil }
         self.init(red: results[0], green: results[1], blue: results[2], alpha: results[3])
     }
