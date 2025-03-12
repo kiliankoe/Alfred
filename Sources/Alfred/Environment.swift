@@ -167,9 +167,24 @@ public enum Environment {
         return debug == "1"
     }
 
-    private static func envvar(_ key: String) -> String? {
-        return ProcessInfo.processInfo.environment[key]
+    private static func envvar(_ variable: String) -> String? {
+        guard let value = ProcessInfo.processInfo.environment[variable]?.trimmed, !value.isEmpty else {
+            return nil
+        }
+        return value
     }
+
+    @inline(__always)
+    public static func getDefined<T: LosslessStringConvertible>(_ variable: String) -> T? {
+        if let value = envvar(variable) {
+            return .init(value)
+        }
+        return nil
+    }
+}
+
+private extension StringProtocol {
+    var trimmed: String { self.trimmingCharacters(in: .whitespacesAndNewlines) }
 }
 
 private extension NSColor {
@@ -180,7 +195,7 @@ private extension NSColor {
             .map { result -> String in
                 let startIdx = rgba.index(rgba.startIndex, offsetBy: result.range.location)
                 let endIdx = rgba.index(startIdx, offsetBy: result.range.length)
-                return rgba.substring(with: startIdx..<endIdx)
+                return String(rgba[startIdx..<endIdx])
             }
             .compactMap { Double($0).map({ CGFloat($0) }) }
         guard results.count == 4 else { return nil }
