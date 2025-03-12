@@ -1,30 +1,52 @@
-public struct ComplexArgument: Encodable, Equatable {
-    var argument: String?
-    var variables: [String: String] = [:]
+import Foundation
 
-    public init(argument: String? = nil, variables: [String: String]? = nil) {
-        self.argument = argument
-        if let variables = variables {
-            self.variables = variables
+/// The argument which is passed through the workflow to the connected output action
+public enum Argument: Equatable {
+    case single(String)
+    case array([String])
+}
+
+// MARK: - Codable
+extension Argument : Codable {
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .single(let strn): try container.encode(strn)
+        case .array(let nest): try container.encode(nest)
+        }
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let string = try? container.decode(String.self)
+        let nested = try? container.decode([String].self)
+
+        switch (string, nested) {
+        case let (.some(value),_): self = .single(value)
+        case let (_,.some(value)): self = .array(value)
+        default:
+            throw DecodingError.dataCorrupted(
+                DecodingError.Context(
+                    codingPath: container.codingPath,
+                    debugDescription: "Unable to decode Argument"
+                )
+            )
         }
     }
 }
 
-public enum Argument: Encodable, Equatable {
-    case simple(String)
-    case complex(ComplexArgument)
+// MARK: - ExpressibleByArrayLiteral
+extension Argument: ExpressibleByArrayLiteral {
+    public typealias ArrayLiteralElement = String
 
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        switch self {
-        case .simple(let string):
-            try container.encode(string)
-        case .complex(let complex):
-            struct Wrapper: Encodable {
-                let alfredworkflow: ComplexArgument
-            }
-            let wrapper = Wrapper(alfredworkflow: complex)
-            try container.encode(wrapper)
-        }
+    public init(arrayLiteral elements: Self.ArrayLiteralElement...) {
+        self = .array(elements)
+    }
+}
+
+// MARK: - ExpressibleByStringLiteral
+extension Argument: ExpressibleByStringLiteral {
+    public init(stringLiteral value: String) {
+        self = .single(value)
     }
 }
